@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "d1e829a3-47c6-4232-9a99-39b283ff5acf",
+		"name": "Game Achievements",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getAllGameAchievements",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/get-all-game-achievements/c6d9013c-ac53-43fe-8093-58815c224977",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"get-all-game-achievements",
+						"c6d9013c-ac53-43fe-8093-58815c224977"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAchievements",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/get/f687ab74-257d-4f09-8128-ecc0376cf26d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"get",
+						"f687ab74-257d-4f09-8128-ecc0376cf26d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAchievement",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t{\r\n\t\t\"displayName\": \"\",\r\n\t\t\"description\": \"test6\",\r\n\t\t\"icon\": \"icon1\",\r\n        \"game\":{\r\n            \"id\":\"c6d9013c-ac53-43fe-8093-58815c224975\"\r\n        }\r\n\t}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/create-achievement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"create-achievement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateAchievment",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteAchievement",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/delete-achievement/8d122aed-0905-43bd-860a-9aeaf278c192",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"delete-achievement",
+						"8d122aed-0905-43bd-860a-9aeaf278c192"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
