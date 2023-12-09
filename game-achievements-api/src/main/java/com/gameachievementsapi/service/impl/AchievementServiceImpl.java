@@ -3,6 +3,8 @@ package com.gameachievementsapi.service.impl;
 import com.gameachievementsapi.exception.GameAchievementsException;
 import com.gameachievementsapi.model.Achievement;
 import com.gameachievementsapi.model.Game;
+import com.gameachievementsapi.model.dto.AchievementDto;
+import com.gameachievementsapi.model.dto.GameDto;
 import com.gameachievementsapi.repository.AchievementRepository;
 import com.gameachievementsapi.repository.GameRepository;
 import com.gameachievementsapi.service.AchievementService;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AchievementServiceImpl implements AchievementService {
@@ -24,15 +27,18 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<Achievement> getAllGameAchievements (UUID gameId){
-        List<Achievement> achievements = achievementRepository.findByGameIdOrderByDisplayOrder(gameId);
-        return achievements;
+    public List<AchievementDto> getGameAchievements (UUID gameId){
+        List<Achievement> achievements = getAllGameAchievements(gameId);
+        return achievements.stream()
+                 .map(this::mapAchievementDtoEntityToAchievementDtoDTO)
+                 .collect(Collectors.toList());
     }
 
     @Override
-    public Achievement getAchievement(UUID id) throws GameAchievementsException {
-        return achievementRepository.findById(id)
+    public AchievementDto getAchievement(UUID id) throws GameAchievementsException {
+        Achievement achievement = achievementRepository.findById(id)
                 .orElseThrow(() -> new GameAchievementsException("Achievement not found with id: "+ id));
+        return mapAchievementDtoEntityToAchievementDtoDTO(achievement);
     }
 
     @Override
@@ -42,33 +48,53 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public Achievement createAchievement(Achievement achievement) throws GameAchievementsException {
-        Game game = getGame(achievement.getGame().getId());
+    public AchievementDto createAchievement(AchievementDto achievementDto, UUID gameId) throws GameAchievementsException {
+        Game game = getGame(gameId);
+        Achievement achievement = new Achievement();
+        achievement.setDisplayName(achievementDto.getDisplayName());
+        achievement.setDisplayOrder(achievementDto.getDisplayOrder());
+        achievement.setIcon(achievementDto.getIcon());
+        achievement.setDescription(achievementDto.getDescription());
         achievement.setGame(game);
         achievement.setCreated(LocalDate.now());
 
-        return achievementRepository.save(achievement);
+        return mapAchievementDtoEntityToAchievementDtoDTO(achievementRepository.save(achievement));
     }
 
     @Override
-    public Achievement updateAchievement(Achievement achievement) throws GameAchievementsException{
-        Achievement achievementUpload = getAchievement(achievement.getId());
-        Game game = getGame(achievement.getGame().getId());
+    public AchievementDto updateAchievement(AchievementDto achievementDto, UUID id) throws GameAchievementsException{
+        Achievement achievementUpload = achievementRepository.findById(id)
+                .orElseThrow(() -> new GameAchievementsException("Achievement not found with id: "+ id));
 
-        achievementUpload.setDisplayName(achievement.getDisplayName());
-        achievementUpload.setDescription(achievement.getDescription());
-        achievementUpload.setIcon(achievement.getIcon());
-        achievementUpload.setDisplayOrder(achievement.getDisplayOrder());
-        achievementUpload.setGame(game);
-        achievementUpload.setCreated(achievement.getCreated());
+        achievementUpload.setDisplayName(achievementDto.getDisplayName());
+        achievementUpload.setDescription(achievementDto.getDescription());
+        achievementUpload.setIcon(achievementDto.getIcon());
+        achievementUpload.setDisplayOrder(achievementDto.getDisplayOrder());
+        achievementUpload.setCreated(achievementDto.getCreated());
         achievementUpload.setUpdated(LocalDate.now());
-        return achievementRepository.save(achievementUpload);
+        return mapAchievementDtoEntityToAchievementDtoDTO(achievementRepository.save(achievementUpload));
     }
 
     @Override
     public void deleteAchievement(UUID id) throws GameAchievementsException {
-        Achievement achievement = getAchievement(id);
-        achievementRepository.delete(achievement);
+        achievementRepository.deleteById(id);
+    }
+
+    private List<Achievement> getAllGameAchievements(UUID gameId){
+        return achievementRepository.findByGameIdOrderByDisplayOrder(gameId);
+    }
+
+    private AchievementDto mapAchievementDtoEntityToAchievementDtoDTO(Achievement entity) {
+        AchievementDto dto = new AchievementDto();
+        dto.setDisplayName(entity.getDisplayName());
+        dto.setIcon(entity.getIcon());
+        dto.setDescription(entity.getDescription());
+        dto.setDisplayOrder(entity.getDisplayOrder());
+        dto.setCreated(entity.getCreated());
+        dto.setUpdated(entity.getUpdated());
+        dto.setGame(new GameDto(entity.getGame().getDisplayName()));
+
+        return dto;
     }
 
 }

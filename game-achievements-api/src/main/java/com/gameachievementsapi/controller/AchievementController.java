@@ -1,7 +1,7 @@
 package com.gameachievementsapi.controller;
 
 import com.gameachievementsapi.exception.GameAchievementsException;
-import com.gameachievementsapi.model.Achievement;
+import com.gameachievementsapi.model.dto.AchievementDto;
 import com.gameachievementsapi.service.AchievementService;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -20,31 +20,31 @@ public class AchievementController extends BaseController {
         this.achievementService = achievementService;
     }
 
-    @GetMapping(path="/get-all-game-achievements/{gameId}")
-    public List<Achievement> getAllGameAchievements (@PathVariable UUID gameId){
-        return achievementService.getAllGameAchievements(gameId);
+    @GetMapping(path="/games/{gameId}/achievements")
+    public List<AchievementDto> getGameAchievements (@PathVariable UUID gameId){
+        return achievementService.getGameAchievements(gameId);
     }
 
-    @GetMapping(path="/get/{id}")
-    public Achievement getAchievement (@PathVariable UUID id) throws GameAchievementsException{
+    @GetMapping(path="/achievements/{id}")
+    public AchievementDto getAchievement (@PathVariable UUID id) throws GameAchievementsException{
         return achievementService.getAchievement(id);
     }
 
-    @PutMapping(path="/create-achievement")
-    public Achievement createAchievement (@Valid @RequestBody Achievement achievement, BindingResult result) throws BindException, GameAchievementsException{
+    @PutMapping(path="/create/achievement/{gameId}/game")
+    public AchievementDto createAchievement (@Valid @RequestBody AchievementDto achievementDto, @PathVariable UUID gameId, BindingResult result) throws BindException, GameAchievementsException{
         if (result.hasErrors())
             throw new BindException(result);
-        return achievementService.createAchievement(achievement);
+        return achievementService.createAchievement(achievementDto, gameId);
     }
 
-    @PutMapping(path="/update-achievement")
-    public Achievement updateAchievement (@Valid @RequestBody Achievement achievement, BindingResult result) throws BindException, GameAchievementsException {
+    @PutMapping(path="/update/achievement/{id}")
+    public AchievementDto updateAchievement (@Valid @RequestBody AchievementDto achievementDto, @PathVariable UUID id, BindingResult result) throws BindException, GameAchievementsException {
         if (result.hasErrors())
             throw new BindException(result);
-        return achievementService.updateAchievement(achievement);
+        return achievementService.updateAchievement(achievementDto, id);
     }
 
-    @DeleteMapping(path="/delete-achievement/{id}")
+    @DeleteMapping(path="/delete/achievement/{id}")
     public void deleteAchievement (@PathVariable UUID id) throws GameAchievementsException {
          achievementService.deleteAchievement(id);
     }

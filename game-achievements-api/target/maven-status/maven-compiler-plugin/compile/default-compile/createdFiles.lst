@@ -1,0 +1,12 @@
+com\gameachievementsapi\model\Game.class
+com\gameachievementsapi\repository\AchievementRepository.class
+com\gameachievementsapi\repository\GameRepository.class
+com\gameachievementsapi\service\AchievementService.class
+com\gameachievementsapi\exception\ExceptionRespons.class
+com\gameachievementsapi\controller\AchievementController.class
+com\gameachievementsapi\exception\RestResponseEntityExceptionHandler.class
+com\gameachievementsapi\GameAchievementsApiApplication.class
+com\gameachievementsapi\service\impl\AchievementServiceImpl.class
+com\gameachievementsapi\controller\BaseController.class
+com\gameachievementsapi\model\Achievement.class
+com\gameachievementsapi\exception\GameAchievementsException.class
